@@ -64,7 +64,7 @@ const ProjectList = ({ projects, loadProjects }) => { // destructuring props by 
             <button>Phase 4</button>
             <button>Phase 5</button>
          </div>
-         <input onChange={handleSearch} type='text' placeholder='Search...' />
+         <input onChange={handleSearch} type='text' placeholder='Search...' value={searchBarText} />
          <ul className='cards'>
             {renderProjects(searchResults)}
          </ul>
