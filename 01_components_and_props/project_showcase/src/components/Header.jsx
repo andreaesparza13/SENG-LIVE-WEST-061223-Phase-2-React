@@ -1,11 +1,15 @@
-import React, { useState } from 'react'
+import React from 'react'
 
-const Header = () => {
+const Header = ({ isDarkMode, toggleDarkMode }) => {
    
-   const [isDarkMode, setIsDarkMode] = useState(true)
+   // MOVING ALL THIS UP TO APP (LIFTING STATE)
+   // const [isDarkMode, setIsDarkMode] = useState(true)
+   // const toggleDarkMode = () => {
+   //    setIsDarkMode(!isDarkMode)
+   // }
 
-   const handleToggleDarkMode = () => {
-      setIsDarkMode(!isDarkMode)
+   const handleToggleDarkMode = (e) => {
+      toggleDarkMode()
    }
 
    const buttonText = isDarkMode ? "Light Mode" : "Dark Mode"

@@ -3,7 +3,14 @@ import React from 'react'
 const ProjectForm = () => {
    return (
       <section>
-         <h3>Project Form</h3>
+         <form className="form">
+            <h3>Add New Project</h3>
+            <label htmlFor="name">Name</label>
+            <input type="text" id="name" name="name" />
+            <label htmlFor="about">About</label>
+            <textarea id="about" name="about" />
+            <button type="submit">Add Project</button>
+         </form>
       </section>
    )
 }
