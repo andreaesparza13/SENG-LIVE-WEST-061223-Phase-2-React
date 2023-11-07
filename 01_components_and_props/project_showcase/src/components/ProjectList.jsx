@@ -1,16 +1,26 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import ProjectListItem from './ProjectListItem'
 
-const ProjectList = ({ projects, onSelectPhase, onSearchChange, searchQuery }) => { // destructuring props by using curly braces here
+const ProjectList = ({ projects, onSelectPhase, setSearchQuery, onEditProject, onUpdateProject, onDeleteProject }) => { // destructuring props by using curly braces here
 
-   // Add state to search bar
-   // const [searchBarText, setSearchBarText] = useState('')
+   // Debounce searchQuery so we can reduce amount of re-renders while using search bar
+   const [searchBarText, setSearchBarText] = useState('')
 
    // Creates search bar
    const handleSearch = (e) => {
       // setSearchBarText(e.target.value)
-      onSearchChange(e.target.value)
+      setSearchBarText(e.target.value)
    }
+
+   useEffect(() => {
+      const scheduledUpdate = setTimeout(() => {
+         setSearchQuery(searchBarText)
+      }, 500)
+
+      return () => {
+         clearTimeout(scheduledUpdate)
+      } // eslint-disable-next-line
+   }, [searchBarText]) 
    
    // MOVED ALL THIS INTO PROJECT CONTAINER
    // Use state to bring in projects array
@@ -57,6 +67,9 @@ const ProjectList = ({ projects, onSelectPhase, onSearchChange, searchQuery }) =
       <ProjectListItem 
          key={project.id}
          project={project}
+         onEditProject={onEditProject}
+         onUpdateProject={onUpdateProject}
+         onDeleteProject={onDeleteProject}
       />
    ))
 
@@ -79,7 +92,7 @@ const ProjectList = ({ projects, onSelectPhase, onSearchChange, searchQuery }) =
             onChange={handleSearch} 
             type='text' 
             placeholder='Search...' 
-            value={searchQuery} 
+            // value={searchQuery} 
          />
 
          <ul className='cards'>{projectCards}</ul>
