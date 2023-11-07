@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 
 const initialState = {
-   name: "",
-   about: "",
-   phase: "",
-   image: "",
-   link: "",
+   'name': "",
+   'about': "",
+   'phase': "",
+   'image': "",
+   'link': "",
 }
 
 const ProjectForm = ({ onAddProject }) => {
@@ -28,8 +28,16 @@ const ProjectForm = ({ onAddProject }) => {
    }
 
    const handleFormSubmit = (e) => {
-      e.preventDefault()      
-      onAddProject(formData)
+      e.preventDefault()
+      // Pessimistic rendering of POST request here
+      fetch("http://localhost:4000/projects", {
+         method: "POST",
+         headers: { 'Content-Type': "application/json" },
+         body: JSON.stringify(formData)
+      })
+      .then(res => res.json())
+      .then(newProject => onAddProject(newProject))            
+      // onAddProject(formData)
       setFormData(initialState)
    }
 

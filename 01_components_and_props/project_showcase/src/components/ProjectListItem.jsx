@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 
 // This is what each individual project card will look like
-const ProjectListItem = ({ image, name, about, link, phase }) => {
+const ProjectListItem = ({ project }) => {
 
    // Destructure project object so we can access the individual parts of it
-   // const {name, about, link, image, phase} = project
+   const {name, about, link, image, phase} = project
 
    // Using state to add claps to each project
    const [clapCount, setClapCount] = useState(0)

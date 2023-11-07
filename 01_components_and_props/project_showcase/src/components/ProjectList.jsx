@@ -1,14 +1,15 @@
-import React, { useState } from 'react'
+import React from 'react'
 import ProjectListItem from './ProjectListItem'
 
-const ProjectList = ({ projects, loadProjects }) => { // destructuring props by using curly braces here
+const ProjectList = ({ projects, onSelectPhase, onSearchChange, searchQuery }) => { // destructuring props by using curly braces here
 
    // Add state to search bar
-   const [searchBarText, setSearchBarText] = useState('')
+   // const [searchBarText, setSearchBarText] = useState('')
 
    // Creates search bar
    const handleSearch = (e) => {
-      setSearchBarText(e.target.value)
+      // setSearchBarText(e.target.value)
+      onSearchChange(e.target.value)
    }
    
    // MOVED ALL THIS INTO PROJECT CONTAINER
@@ -21,16 +22,17 @@ const ProjectList = ({ projects, loadProjects }) => { // destructuring props by 
    //    .then(projects => setProjects(projects))
    // }
 
-   const handleLoadButtonClick = (e) => loadProjects()
+   // No longer need this because we are not using a button to load projects anymore
+   // const handleLoadButtonClick = (e) => loadProjects()
    
    // Uses FILTER method to sift through projects and grab whichever ones INCLUDE the search bar text in the name or about section
    // Uses toLowerCase method on both the projects and search bar text so nothing is case sensitive
-   const searchResults = projects.filter(project => {
-      return (
-         project.name.toLowerCase().includes(searchBarText) ||
-         project.about.toLowerCase().includes(searchBarText)
-      )
-   })
+   // const searchResults = projects.filter(project => {
+   //    return (
+   //       project.name.toLowerCase().includes(searchBarText) ||
+   //       project.about.toLowerCase().includes(searchBarText)
+   //    )
+   // })
 
    // Mapping over the array of projects and passing down to ProjectListItem component so we can build what a single project card will look like there
    // const projectItems = searchResults.map(project => {
@@ -38,36 +40,49 @@ const ProjectList = ({ projects, loadProjects }) => { // destructuring props by 
    // })
 
    // Re-writing the above code as a function to render projects
-   const renderProjects = (projects) => {
-      return projects.map(project => (
-         <ProjectListItem
-            key={project.id}
-            // This shortcut allows us to pass in the destructured props in ProjectListItem component
-            {...project}
+   // const renderProjects = (projects) => {
+   //    return projects.map(project => (
+   //       <ProjectListItem
+   //          key={project.id}
+   //          // This shortcut allows us to pass in the destructured props in ProjectListItem component
+   //          {...project}
             
-            // Doing it this way would mean we have to destructure inside of ProjectListItem
-            // project={project}
-         />
-      ))
-   }
+   //          // Doing it this way would mean we have to destructure inside of ProjectListItem
+   //          // project={project}
+   //       />
+   //    ))
+   // }
+
+   const projectCards = projects.map(project => (
+      <ProjectListItem 
+         key={project.id}
+         project={project}
+      />
+   ))
 
    return (
       <section>
-         <button onClick={handleLoadButtonClick}>Load Projects</button>
-         <br/>
-         <h3>Projects</h3>
+         {/* Removed this button because projects are now loading with a useEffect inside of ProjectContainer */}
+         {/* <button onClick={handleLoadButtonClick}>Load Projects</button> */}
+         <h2>Projects</h2>
+
          <div className='filter'>
-            <button>All</button>
-            <button>Phase 1</button>
-            <button>Phase 2</button>
-            <button>Phase 3</button>
-            <button>Phase 4</button>
-            <button>Phase 5</button>
+            <button onClick={() => onSelectPhase("")}>All</button>
+            <button onClick={() => onSelectPhase("1")}>Phase 1</button>
+            <button onClick={() => onSelectPhase("2")}>Phase 2</button>
+            <button onClick={() => onSelectPhase("3")}>Phase 3</button>
+            <button onClick={() => onSelectPhase("4")}>Phase 4</button>
+            <button onClick={() => onSelectPhase("5")}>Phase 5</button>
          </div>
-         <input onChange={handleSearch} type='text' placeholder='Search...' value={searchBarText} />
-         <ul className='cards'>
-            {renderProjects(searchResults)}
-         </ul>
+
+         <input 
+            onChange={handleSearch} 
+            type='text' 
+            placeholder='Search...' 
+            value={searchQuery} 
+         />
+
+         <ul className='cards'>{projectCards}</ul>
       </section>
    )
 }
