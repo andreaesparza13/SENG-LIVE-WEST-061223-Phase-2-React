@@ -1,17 +1,26 @@
 import React, { useEffect, useState } from 'react'
+import { useParams, useHistory } from 'react-router-dom'
 
 const ProjectEditForm = ({ projectToEdit, onUpdateProject }) => {
 
-   const [formData, setFormData] = useState(projectToEdit)
+   const { id } = useParams()
+   const history = useHistory()
 
+   const [formData, setFormData] = useState({
+      name: "",
+      about: "",
+      link: "",
+      image: "",
+      phase: "",
+   })
    const { name, about, phase, link, image } = formData
    
    // Re-fetches the projectToEdit from the database upon load to ensure we have the most recent values for our FormData
    useEffect(() => {
-      fetch(`http://localhost:4000/projects/${projectToEdit.id}`)
+      fetch(`http://localhost:4000/projects/${id}`)
          .then(res => res.json())
          .then(project => setFormData(project))
-   }, [projectToEdit.id])
+   }, [id])
 
    const handleOnChange = (e) => {
       const { name, value } = e.target
@@ -21,7 +30,7 @@ const ProjectEditForm = ({ projectToEdit, onUpdateProject }) => {
    const handleSubmit = (e) => {
       e.preventDefault()
 
-      // Optimistic PATCH
+      // ^ Optimistic PATCH
       // fetch(`http://localhost:4000/projects/${projectToEdit.id}`, {
       //    method: "PATCH",
       //    headers: { 'Content-Type': "application/json" },
@@ -29,14 +38,17 @@ const ProjectEditForm = ({ projectToEdit, onUpdateProject }) => {
       // })
       // onUpdateProject(formData)
 
-      // Pessimistic PATCH
-      fetch(`http://localhost:4000/projects/${projectToEdit.id}`, {
+      // ^ Pessimistic PATCH
+      fetch(`http://localhost:4000/projects/${id}`, {
          method: "PATCH",
          headers: { 'Content-Type': "application/json" },
          body: JSON.stringify(formData)
       })
          .then(res => res.json())
-         .then(onUpdateProject)
+         .then(updatedProject => {
+            onUpdateProject(updatedProject)
+            history.push(`/projects/${id}`)
+         })
    }
 
    return (

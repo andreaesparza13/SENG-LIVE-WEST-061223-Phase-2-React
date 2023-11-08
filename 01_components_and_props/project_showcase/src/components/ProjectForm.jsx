@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom'
 
 const initialState = {
    'name': "",
@@ -11,6 +12,8 @@ const initialState = {
 const ProjectForm = ({ onAddProject }) => {
       
    const [formData, setFormData] = useState(initialState)
+
+   const history = useHistory()
 
    // This is the same as above but done one by one
    // const [name, setName] = useState('')
@@ -29,14 +32,17 @@ const ProjectForm = ({ onAddProject }) => {
 
    const handleFormSubmit = (e) => {
       e.preventDefault()
-      // Pessimistic rendering of POST request here
+      // ^ Pessimistic rendering of POST request here
       fetch("http://localhost:4000/projects", {
          method: "POST",
          headers: { 'Content-Type': "application/json" },
          body: JSON.stringify(formData)
       })
       .then(res => res.json())
-      .then(newProject => onAddProject(newProject))            
+      .then(newProject => {
+         onAddProject(newProject)
+         history.push("/projects")
+      })            
       // onAddProject(formData)
       setFormData(initialState)
    }

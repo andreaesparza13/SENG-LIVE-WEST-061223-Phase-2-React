@@ -22,7 +22,7 @@ const ProjectList = ({ projects, onSelectPhase, setSearchQuery, onEditProject, o
       } // eslint-disable-next-line
    }, [searchBarText]) 
    
-   // MOVED ALL THIS INTO PROJECT CONTAINER
+   // ^ MOVED ALL THIS INTO PROJECT CONTAINER
    // Use state to bring in projects array
    // const [projects, setProjects] = useState([])
    // Loading projects from json using state and fetch call
@@ -32,9 +32,10 @@ const ProjectList = ({ projects, onSelectPhase, setSearchQuery, onEditProject, o
    //    .then(projects => setProjects(projects))
    // }
 
-   // No longer need this because we are not using a button to load projects anymore
+   // ^ No longer need this because we are not using a button to load projects anymore
    // const handleLoadButtonClick = (e) => loadProjects()
    
+   // ^ No longer need this because we are filtering from the backend instead of local state
    // Uses FILTER method to sift through projects and grab whichever ones INCLUDE the search bar text in the name or about section
    // Uses toLowerCase method on both the projects and search bar text so nothing is case sensitive
    // const searchResults = projects.filter(project => {
@@ -44,25 +45,28 @@ const ProjectList = ({ projects, onSelectPhase, setSearchQuery, onEditProject, o
    //    )
    // })
 
+   // ^ No longer need this because the projects we need are already being passed in as props
    // Mapping over the array of projects and passing down to ProjectListItem component so we can build what a single project card will look like there
    // const projectItems = searchResults.map(project => {
    //    return <ProjectListItem key={project.id} project={project} />
    // })
 
+   // ^ No longer need this because the projects we need are already being passed in as props
    // Re-writing the above code as a function to render projects
    // const renderProjects = (projects) => {
    //    return projects.map(project => (
    //       <ProjectListItem
    //          key={project.id}
-   //          // This shortcut allows us to pass in the destructured props in ProjectListItem component
+            // This shortcut allows us to pass in the destructured props in ProjectListItem component
    //          {...project}
             
-   //          // Doing it this way would mean we have to destructure inside of ProjectListItem
-   //          // project={project}
+            // Doing it this way would mean we have to destructure inside of ProjectListItem
+            // project={project}
    //       />
    //    ))
    // }
 
+   // ^ Using this because we can use .map directly on the projects array that is being passed in as props
    const projectCards = projects.map(project => (
       <ProjectListItem 
          key={project.id}
@@ -75,7 +79,7 @@ const ProjectList = ({ projects, onSelectPhase, setSearchQuery, onEditProject, o
 
    return (
       <section>
-         {/* Removed this button because projects are now loading with a useEffect inside of ProjectContainer */}
+         {/* // ^ Removed this button because projects are now loading with a useEffect inside of ProjectContainer */}
          {/* <button onClick={handleLoadButtonClick}>Load Projects</button> */}
          <h2>Projects</h2>
 

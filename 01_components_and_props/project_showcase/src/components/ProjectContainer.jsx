@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react'
+import { Switch, Route } from 'react-router-dom'
 import ProjectForm from './ProjectForm.jsx'
 import ProjectList from './ProjectList.jsx'
 import ProjectEditForm from './ProjectEditForm.jsx'
+import ProjectDetail from './ProjectDetail.jsx'
 
-// NO LONGER NEED THIS SINCE WE ARE FETCHING PROJECTS FROM DB.JSON
+// ^ NO LONGER NEED THIS SINCE WE ARE FETCHING PROJECTS FROM DB.JSON
 // import projectsArr from '../projects'
 
 const ProjectContainer = () => {
 
    // Using STATE to bring in PROJECTS from db.json into an array -- more dynamic than importing from projects.js because this is how we would fetch from an API
    const [projects, setProjects] = useState([])
-   const [projectToEdit, setProjectToEdit] = useState(null)
+   // const [projectToEdit, setProjectToEdit] = useState(null)
 
    // Giving functionality to "Phase" buttons by using a side effect
    const [selectedPhase, setSelectedPhase] = useState("")
@@ -18,10 +20,11 @@ const ProjectContainer = () => {
    // Moving search bar functionality here
    const [searchQuery, setSearchQuery] = useState('')
 
-   // Moved away from using a button to load the projects and into using a useEffect 
+   // ^ Moved away from using a button to load the projects and into using a useEffect 
+
    // Empty dependency array stops this from rerendering on an infinite loop
    useEffect(() => {
-      // This does not need to be a function, could just run the fetch
+      // ^ This does not need to be a function, could just run the fetch
       // const onLoadProjects = () => {
       //    fetch("http://localhost:4000/projects")
       //    .then(res => res.json())
@@ -47,7 +50,7 @@ const ProjectContainer = () => {
    const onAddProject = (project) => {
       setProjects(projects => [...projects, project])
 
-      // Optimistic Rendering of POST Request by doing it here
+      // ^ Optimistic Rendering of POST Request by doing it here
       // fetch("http://localhost:4000/projects", {
       //    method: "POST",
       //    headers: { 'Content-Type': "application/json" },
@@ -58,7 +61,7 @@ const ProjectContainer = () => {
    }
 
    const onUpdateProject = (updatedProject) => {
-      setProjectToEdit(null)
+      // setProjectToEdit(null)
 
       // setProjects(projects => {
       //    return projects.map(originalProject => {
@@ -70,13 +73,13 @@ const ProjectContainer = () => {
       //    })
       // })
 
-      // Takes the above code and compacts into a ternary expression
+      // ^ Takes the above code and compacts into a ternary expression
       setProjects(projects => projects.map(project => project.id === updatedProject.id ? updatedProject : project))
    }
 
-   const onEditProject = (project) => {
-      setProjectToEdit(project)
-   }
+   // const onEditProject = (project) => {
+   //    setProjectToEdit(project)
+   // }
 
    const onDeleteProject = (projectId) => {
       setProjects(projects => {
@@ -84,42 +87,50 @@ const ProjectContainer = () => {
       })
    }
 
-   const renderForm = () => {
-      if (projectToEdit) {
-         return (
-            <ProjectEditForm 
-               projectToEdit={projectToEdit}
-               onUpdateProject={onUpdateProject}
-            />
-         )
-      } else {
-         return <ProjectForm onAddProject={onAddProject} />
-      }
-   }
+   // const renderForm = () => {
+   //    if (projectToEdit) {
+   //       return (
+   //          <ProjectEditForm 
+   //             projectToEdit={projectToEdit}
+   //             onUpdateProject={onUpdateProject}
+   //          />
+   //       )
+   //    } else {
+   //       return <ProjectForm onAddProject={onAddProject} />
+   //    }
+   // }
 
    return (
-      <>
-         {/* <ProjectForm 
-            onAddProject={onAddProject}
-         /> */}
-         {renderForm()}
-         <ProjectList 
-            projects={projects}
+      <Switch>
+         <Route path="/projects/new">
+            <ProjectForm onAddProject={onAddProject} />
+         </Route>
+         <Route path="/projects/:id/edit">
+            <ProjectEditForm onUpdateProject={onUpdateProject}/>
+         </Route>
+         <Route path="/projects/:id">
+            <ProjectDetail />
+         </Route>
+         <Route>
+            <ProjectList 
+               projects={projects}
+               
+               
+               // onEditProject={onEditProject}
 
-            onEditProject={onEditProject}
-            onUpdateProject={onUpdateProject}
-            onDeleteProject={onDeleteProject}
-
-            // Don't need this anymore because of the useEffect
-            // loadProjects={onLoadProjects} 
-
-            onSelectPhase={setSelectedPhase}
-            
-            setSearchQuery={setSearchQuery}
-            // searchQuery={searchQuery}
-            
-         />
-      </>
+               onUpdateProject={onUpdateProject}
+               onDeleteProject={onDeleteProject}
+               
+               // ^ Don't need this anymore because of the useEffect
+               // loadProjects={onLoadProjects} 
+               
+               onSelectPhase={setSelectedPhase}
+               
+               setSearchQuery={setSearchQuery}
+               // searchQuery={searchQuery}
+            />
+         </Route>
+      </Switch>
    )
 }
 
